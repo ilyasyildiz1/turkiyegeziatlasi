@@ -1,0 +1,20 @@
+{
+  "name": "Türkiye Gezi Atlası",
+  "short_name": "Gezi Atlası",
+  "description": "81 ilin interaktif gezi atlası: gezdiğin illeri işaretle, pasaportunu doldur, sesli rehberle keşfet.",
+  "lang": "tr",
+  "dir": "ltr",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#BFD9E2",
+  "theme_color": "#BFD9E2",
+  "categories": ["travel", "education", "navigation"],
+  "icons": [
+    { "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

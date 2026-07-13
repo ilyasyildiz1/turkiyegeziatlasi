@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2E4650"/>
+      <stop offset="1" stop-color="#243038"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.42" r="0.62">
+      <stop offset="0" stop-color="#33566A"/>
+      <stop offset="1" stop-color="#243038"/>
+    </radialGradient>
+  </defs>
+  <!-- maskable-safe: important content within central 80% -->
+  <rect width="512" height="512" fill="url(#bg)"/>
+  <rect width="512" height="512" fill="url(#glow)"/>
+  <!-- enlem/boylam dokusu -->
+  <g stroke="#4A6472" stroke-width="2" opacity="0.5">
+    <line x1="0" y1="128" x2="512" y2="128"/>
+    <line x1="0" y1="256" x2="512" y2="256"/>
+    <line x1="0" y1="384" x2="512" y2="384"/>
+    <line x1="128" y1="0" x2="128" y2="512"/>
+    <line x1="256" y1="0" x2="256" y2="512"/>
+    <line x1="384" y1="0" x2="384" y2="512"/>
+  </g>
+  <!-- pasaport damgası -->
+  <g transform="translate(256 256) rotate(-8)">
+    <circle r="150" fill="none" stroke="#D98E3B" stroke-width="12"/>
+    <circle r="128" fill="none" stroke="#D98E3B" stroke-width="4" stroke-dasharray="6 12"/>
+    <!-- pusula yıldızı -->
+    <g fill="#B03A2E">
+      <path d="M0 -104 L22 -8 L0 0 L-22 -8 Z"/>
+      <path d="M0 104 L22 8 L0 0 L-22 8 Z" opacity="0.85"/>
+      <path d="M104 0 L8 22 L0 0 L8 -22 Z" opacity="0.85"/>
+      <path d="M-104 0 L-8 22 L0 0 L-8 -22 Z" opacity="0.85"/>
+    </g>
+    <g fill="#2E8B6A">
+      <path d="M74 -74 L20 -6 L0 0 L6 -20 Z" opacity="0.9"/>
+      <path d="M-74 74 L-20 6 L0 0 L-6 20 Z" opacity="0.9"/>
+      <path d="M74 74 L6 20 L0 0 L20 6 Z" opacity="0.9"/>
+      <path d="M-74 -74 L-6 -20 L0 0 L-20 -6 Z" opacity="0.9"/>
+    </g>
+    <circle r="16" fill="#EBE1CC"/>
+    <text x="0" y="86" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif"
+          font-size="52" font-weight="700" fill="#EBE1CC" letter-spacing="6">TR</text>
+  </g>
+</svg>
