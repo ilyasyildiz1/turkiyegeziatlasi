@@ -60,3 +60,9 @@ turkiyegeziatlasi/
 ├── icons/                  # uygulama ikonları (+ kaynak icon.svg)
 └── README.md
 ```
+
+## Lisanslar ve atıflar
+
+- **Türkiye SVG haritası:** [dnomak/svg-turkiye-haritasi](https://github.com/dnomak/svg-turkiye-haritasi) — MIT Lisansı, © 2015 Doğukan Güven Nomak. Tam metin: [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md)
+- **Yazı tipleri:** Fraunces ve Manrope (Google Fonts, SIL OFL 1.1)
+- **İçerik:** İl tanıtım metinleri, gezi önerileri ve sesli rehber anlatımları bu proje için özgün olarak yazılmıştır. Lokanta önerileri editoryal derlemedir; puan/yorum verisi içermez.
