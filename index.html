@@ -353,6 +353,68 @@ g.gezildi ~ #etiketler{}
   background:#EAF4EE;border:1.5px dashed #9CC7AE;color:var(--cini-koyu);
 }
 .rehber-ipucu:hover{background:#DDEDE3}
+
+/* ── görsel cila ── */
+/* deniz ışık oyunları */
+body::after{
+  content:"";position:fixed;inset:-6%;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(420px 300px at 18% 12%, rgba(255,255,255,.38), transparent 70%),
+    radial-gradient(560px 400px at 85% 88%, rgba(30,107,79,.10), transparent 72%),
+    radial-gradient(300px 220px at 70% 20%, rgba(255,255,255,.20), transparent 70%);
+  animation:isik-suzul 26s ease-in-out infinite alternate;
+}
+@keyframes isik-suzul{to{transform:translate(2.2%,1.6%) scale(1.04)}}
+/* başlık altı fırça çizgisi */
+.baslik h1{text-shadow:0 1px 0 rgba(255,255,255,.55)}
+.baslik p{position:relative;padding-bottom:6px}
+.baslik p::after{
+  content:"";position:absolute;left:0;bottom:0;width:44px;height:3px;border-radius:2px;
+  background:linear-gradient(90deg,var(--bakir),var(--bakir-koyu));
+}
+/* arama odak parlaması */
+.arama input{transition:border-color .2s, box-shadow .25s}
+.arama input:focus{border-color:var(--bakir);box-shadow:0 0 0 4px rgba(217,142,59,.16)}
+/* harita: kağıt derinliği + giriş animasyonu */
+#turkiye{filter:drop-shadow(0 12px 22px rgba(36,48,56,.30)) drop-shadow(0 2px 5px rgba(36,48,56,.18))}
+#turkiye g{transform-box:fill-box;transform-origin:center;animation:il-gel .55s ease backwards}
+@keyframes il-gel{from{opacity:0;transform:translateY(8px)}}
+@keyframes il-pop{0%{transform:scale(1)}35%{transform:scale(1.07)}100%{transform:scale(1)}}
+#etiketler{opacity:0;animation:etiket-gel .8s ease 1.15s forwards}
+@keyframes etiket-gel{to{opacity:1}}
+/* pusula gülü dekoru */
+#pusula-dekor{position:absolute;left:14px;bottom:16px;width:72px;height:72px;opacity:.55;pointer-events:none;z-index:12}
+#pusula-dekor svg{width:100%;height:100%;animation:pusula-don 240s linear infinite}
+@keyframes pusula-don{to{transform:rotate(360deg)}}
+/* alt ipucu girişi */
+.ipucu{animation:ipucu-gel .6s ease .9s backwards}
+@keyframes ipucu-gel{from{opacity:0;transform:translate(-50%,10px)}}
+/* zoom ve rehber butonları */
+.zoomlar button{transition:transform .15s, box-shadow .15s}
+.zoomlar button:hover{transform:translateY(-1px);box-shadow:0 6px 18px var(--kagit-golge)}
+.zoomlar button:active{transform:scale(.94)}
+.rehber-btn{transition:background .2s, color .2s, transform .15s}
+.rehber-btn:active{transform:scale(.96)}
+/* panel: kağıt çizgisi dokusu */
+#panel::before{
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;
+  background:repeating-linear-gradient(0deg,transparent,transparent 27px,rgba(36,48,56,.03) 28px);
+}
+/* cipler ve butonlar */
+.cip{box-shadow:0 1px 3px rgba(36,48,56,.08)}
+.gezdim-btn{transition:all .2s, transform .15s}
+.gezdim-btn:active{transform:scale(.97)}
+.paylas-btn{transition:transform .15s, box-shadow .2s}
+.paylas-btn:hover{box-shadow:0 4px 14px rgba(217,142,59,.25)}
+.paylas-btn:active{transform:scale(.98)}
+/* hareket azaltma tercihi */
+@media (prefers-reduced-motion: reduce){
+  body::after{animation:none}
+  #turkiye g{animation:none}
+  #etiketler{opacity:1;animation:none}
+  #pusula-dekor svg{animation:none}
+  .ipucu{animation:none}
+}
 </style>
 </head>
 <body>
@@ -760,6 +822,30 @@ gruplar.forEach(g=>{
   (grupByPlaka[pk] = grupByPlaka[pk] || []).push(g);
 });
 
+/* ── giriş animasyonu: iller batıdan doğuya dalga dalga belirir ── */
+const hareketAz = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+if(!hareketAz){
+  const sirali = gruplar.slice().sort((a,b)=>a.getBBox().x-b.getBBox().x);
+  sirali.forEach((g,i)=>{ g.style.animationDelay = (i*14)+'ms'; });
+  setTimeout(()=>{ gruplar.forEach(g=>{ g.style.animation='none'; g.style.animationDelay=''; }); }, sirali.length*14+900);
+}
+
+/* ── pusula gülü dekoru ── */
+(function(){
+  const d=document.createElement('div');
+  d.id='pusula-dekor';
+  d.innerHTML='<svg viewBox="0 0 100 100">'+
+    '<circle cx="50" cy="50" r="46" fill="none" stroke="#243038" stroke-width="1" opacity=".45"/>'+
+    '<circle cx="50" cy="50" r="38" fill="none" stroke="#243038" stroke-width=".7" stroke-dasharray="2 5" opacity=".4"/>'+
+    '<path d="M50 8 L55 45 L50 50 L45 45 Z" fill="#B03A2E" opacity=".8"/>'+
+    '<path d="M50 92 L55 55 L50 50 L45 55 Z" fill="#243038" opacity=".55"/>'+
+    '<path d="M8 50 L45 45 L50 50 L45 55 Z" fill="#243038" opacity=".55"/>'+
+    '<path d="M92 50 L55 45 L50 50 L55 55 Z" fill="#243038" opacity=".55"/>'+
+    '<text x="50" y="6" text-anchor="middle" font-size="9" font-weight="800" fill="#B03A2E" font-family="Georgia,serif">K</text>'+
+    '</svg>';
+  document.getElementById('harita-kap').appendChild(d);
+})();
+
 /* ── il adı etiketleri ── */
 (function(){
   const NS = 'http://www.w3.org/2000/svg';
@@ -1113,6 +1199,12 @@ gezdimBtn.onclick = ()=>{
   haritaBoyala();
   gezdimGuncelle(true);
   sayacGuncelle();
+  if(!hareketAz){
+    (grupByPlaka[aktifPlaka]||[]).forEach(g=>{
+      g.style.animation='il-pop .6s cubic-bezier(.2,1.6,.4,1)';
+      setTimeout(()=>{ g.style.animation='none'; }, 680);
+    });
+  }
   const yeniler = [...kazanilanRozetler()].filter(id=>!oncekiRozet.has(id));
   if(yeniler.length){ const r = ROZETLER.find(x=>x.id===yeniler[0]); if(r) rozetToast(r); }
 };
