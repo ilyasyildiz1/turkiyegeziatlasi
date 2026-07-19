@@ -6,6 +6,12 @@
 <title>Türkiye Gezi Atlası</title>
 <meta name="description" content="81 ilin interaktif gezi atlası: gezdiğin illeri işaretle, pasaportunu doldur, sesli rehberle keşfet.">
 <!-- PWA -->
+<meta property="og:title" content="Türkiye Gezi Atlası">
+<meta property="og:description" content="81 ili keşfet, gezdiklerini damgala, pasaportunu doldur.">
+<meta property="og:image" content="https://ilyasyildiz1.github.io/turkiyegeziatlasi/icons/icon-512.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://ilyasyildiz1.github.io/turkiyegeziatlasi/">
+<meta name="twitter:card" content="summary">
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#BFD9E2">
 <meta name="mobile-web-app-capable" content="yes">
@@ -415,9 +421,50 @@ body::after{
   #pusula-dekor svg{animation:none}
   .ipucu{animation:none}
 }
+
+/* il madalyonu */
+.il-basrow{display:flex;align-items:center;gap:12px;margin-top:6px}
+.il-bastext{min-width:0}
+.il-basrow h2{margin-top:0}
+.il-motif{
+  width:56px;height:56px;flex:none;border-radius:50%;
+  background:#F4EFE3;border:1.5px dashed var(--bakir);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--murekkep);transform:rotate(-4deg);
+  box-shadow:0 2px 8px rgba(36,48,56,.10);
+}
+.il-motif svg{width:31px;height:31px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+@keyframes motif-gel{0%{transform:rotate(-14deg) scale(.6);opacity:0}100%{transform:rotate(-4deg) scale(1);opacity:1}}
+@media (prefers-reduced-motion: reduce){.il-motif{animation:none!important}}
 </style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="mot-kopru" viewBox="0 0 24 24"><path d="M2 15h20M4 15v-2a4 4 0 0 1 8 0v2m0-2a4 4 0 0 1 8 0v2M3 19h18"/></symbol>
+<symbol id="mot-dag" viewBox="0 0 24 24"><path d="M2 19 8.5 8 13 15l3-5 6 9zM7 10.5 8.5 8l1.5 2.5"/></symbol>
+<symbol id="mot-kale" viewBox="0 0 24 24"><path d="M6 21V10M18 21V10M6 10V6h3v2h3V6h3v2h3V6v4M6 10h12M4 21h16"/></symbol>
+<symbol id="mot-magara" viewBox="0 0 24 24"><path d="M3 21c0-10 4-15 9-15s9 5 9 15M9 7.5v3M12 6.5v4M15 7.5v3"/></symbol>
+<symbol id="mot-anit" viewBox="0 0 24 24"><path d="M4 6h16M6 6v10M10 6v10M14 6v10M18 6v10M3 16h18M2 20h20"/></symbol>
+<symbol id="mot-antik" viewBox="0 0 24 24"><path d="M12 3 3 8h18zM5 8v9M9.5 8v9M14.5 8v9M19 8v9M3 17h18M2 20h20"/></symbol>
+<symbol id="mot-deniz" viewBox="0 0 24 24"><circle cx="16.5" cy="7" r="3"/><path d="M2 15c2-1.5 4-1.5 6 0s4 1.5 6 0 4-1.5 6 0M2 19c2-1.5 4-1.5 6 0s4 1.5 6 0 4-1.5 6 0"/></symbol>
+<symbol id="mot-cami" viewBox="0 0 24 24"><path d="M7 21v-5c0-3.5 2-5.5 5-5.5s5 2 5 5.5v5M12 10.5V8M3.5 21V9l1.25-2.5L6 9v12M2 21h20"/></symbol>
+<symbol id="mot-dalga" viewBox="0 0 24 24"><path d="M2 10c2-1.5 4-1.5 6 0s4 1.5 6 0 4-1.5 6 0M2 15c2-1.5 4-1.5 6 0s4 1.5 6 0 4-1.5 6 0M2 20c2-1.5 4-1.5 6 0s4 1.5 6 0 4-1.5 6 0"/></symbol>
+<symbol id="mot-ev" viewBox="0 0 24 24"><path d="M3 10 12 4l9 6M5 9v12h14V9M9 21v-6h6v6M8 12h2M14 12h2"/></symbol>
+<symbol id="mot-kar" viewBox="0 0 24 24"><path d="M12 3v18M4.2 7.5l15.6 9M4.2 16.5l15.6-9M12 6l2-2m-2 2-2-2m2 12 2 2m-2-2-2 2"/></symbol>
+<symbol id="mot-gul" viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="4"/><path d="M12 8.5c1.5-.5 2-2 1-3M12 12.5V21M12 17c-3 0-4.5-1.8-4.5-3 2.2 0 4.5 1 4.5 3zm0 0c3 0 4.5-1.8 4.5-3-2.2 0-4.5 1-4.5 3z"/></symbol>
+<symbol id="mot-tekne" viewBox="0 0 24 24"><path d="M4 16h16l-2.5 4h-11zM12 3v13M12 4c4.5 2 6 6.5 6 9.5"/></symbol>
+<symbol id="mot-balon" viewBox="0 0 24 24"><path d="M12 2.5c3.8 0 6.5 2.9 6.5 6.3S15 15.5 12 15.5 5.5 12.2 5.5 8.8 8.2 2.5 12 2.5zM10 15.5l.6 3h2.8l.6-3M10.2 18.5h3.6v3h-3.6z"/></symbol>
+<symbol id="mot-cay" viewBox="0 0 24 24"><path d="M7.5 3c0 4-1.5 5-1.5 8a6 6 0 0 0 12 0c0-3-1.5-4-1.5-8M6.5 8.5h11M5 21h14"/></symbol>
+<symbol id="mot-yaprak" viewBox="0 0 24 24"><path d="M20 4C10 4 4 10 4 20c10 0 16-6 16-16zM4 20C10 14 14 10 20 4"/></symbol>
+<symbol id="mot-meyve" viewBox="0 0 24 24"><circle cx="12" cy="14" r="7"/><path d="M12 7c0-2.5 1.2-3.5 3.5-4M15.5 3c-2 .2-3.5 1.7-3.5 4"/></symbol>
+<symbol id="mot-baglar" viewBox="0 0 24 24"><circle cx="9" cy="12" r="2.6"/><circle cx="15" cy="12" r="2.6"/><circle cx="12" cy="17" r="2.6"/><path d="M12 9V4M12 4c1.5 0 3-.7 4-2"/></symbol>
+<symbol id="mot-lale" viewBox="0 0 24 24"><path d="M8 3.5c0 4 1 6 4 8 3-2 4-4 4-8-2 0-3 1-4 2-1-1-2-2-4-2zM12 11.5V21M12 17c-2.2 0-4.2-1.2-5-3M12 17c2.2 0 4.2-1.2 5-3"/></symbol>
+<symbol id="mot-dondurma" viewBox="0 0 24 24"><path d="M8 11h8l-4 10zM7.2 8a3 3 0 0 1 5-2.2A3 3 0 0 1 16.8 8a3 3 0 0 1-1 3H8.2a3 3 0 0 1-1-3z"/></symbol>
+<symbol id="mot-agac" viewBox="0 0 24 24"><path d="M12 3 7.5 9.5h2L5.5 15h5V21h3v-6h5l-4-5.5h2zM12 3z"/></symbol>
+<symbol id="mot-selale" viewBox="0 0 24 24"><path d="M4 4h11M8 4v9M11.5 4v9M15 4v9M2 17c2-1.5 4-1.5 6 0s4 1.5 6 0 4-1.5 6 0"/></symbol>
+<symbol id="mot-damla" viewBox="0 0 24 24"><path d="M12 3.5c3 4 6 7.5 6 11a6 6 0 0 1-12 0c0-3.5 3-7 6-11zM9.5 14.5a3 3 0 0 0 2.5 3"/></symbol>
+<symbol id="mot-tsutun" viewBox="0 0 24 24"><path d="M4.5 8h7M8 8v13M13.5 5.5h6.5M16.75 5.5V21M3 21h18"/></symbol>
+</defs></svg>
 
 <header>
   <div class="baslik">
@@ -736,8 +783,13 @@ body::after{
   <div class="panel-tut"></div>
   <div class="panel-bas">
     <span class="plaka"><em id="p-plaka">01</em> <span id="p-bolge">TÜRKİYE</span></span>
-    <h2 id="p-ad">İl Adı</h2>
-    <div class="slogan" id="p-slogan"></div>
+    <div class="il-basrow">
+      <div class="il-motif" id="p-motif"><svg><use id="p-motif-use" href="#mot-dag"/></svg></div>
+      <div class="il-bastext">
+        <h2 id="p-ad">İl Adı</h2>
+        <div class="slogan" id="p-slogan"></div>
+      </div>
+    </div>
     <div class="panel-damga" id="p-damga">GEZİLDİ</div>
     <button class="kapat" id="p-kapat" aria-label="Kapat">✕</button>
     <div class="gezdim-satir">
@@ -893,6 +945,12 @@ function panelDoldur(pk){
   document.getElementById('p-plaka').textContent = pk;
   document.getElementById('p-bolge').textContent = 'PLAKA KODU';
   document.getElementById('p-ad').textContent = v.ad;
+  document.getElementById('p-motif-use').setAttribute('href', '#mot-' + (MOTIF[pk] || 'dag'));
+  const bolgeAdi = (typeof BOLGELER !== 'undefined' && (BOLGELER.find(b=>b.iller.includes(pk))||{}).ad) || 'TÜRKİYE';
+  document.getElementById('p-bolge').textContent = bolgeAdi.toLocaleUpperCase('tr');
+  const motifEl = document.getElementById('p-motif');
+  motifEl.style.animation='none'; void motifEl.offsetWidth;
+  motifEl.style.animation='motif-gel .45s cubic-bezier(.2,1.5,.4,1)';
   document.getElementById('p-slogan').textContent = v.slogan;
   document.getElementById('p-tarih').textContent = v.t;
   dinlemeDurdur();
@@ -1356,6 +1414,9 @@ listePanel.addEventListener('click', e=>{
 
 
 /* ── bölgeler, rozetler, istatistik ── */
+/* il -> motif simgesi */
+const MOTIF={"01":"kopru","02":"dag","03":"kale","04":"dag","05":"magara","06":"anit","07":"antik","08":"dag","09":"antik","10":"deniz","11":"cami","12":"dalga","13":"cami","14":"agac","15":"dalga","16":"cami","17":"antik","18":"magara","19":"antik","20":"selale","21":"kale","22":"cami","23":"kale","24":"dag","25":"cami","26":"ev","27":"antik","28":"deniz","29":"magara","30":"dag","31":"antik","32":"gul","33":"deniz","34":"cami","35":"antik","36":"kale","37":"ev","38":"dag","39":"agac","40":"cami","41":"kopru","42":"cami","43":"lale","44":"meyve","45":"baglar","46":"dondurma","47":"ev","48":"tekne","49":"lale","50":"balon","51":"dag","52":"yaprak","53":"cay","54":"dalga","55":"tekne","56":"cami","57":"deniz","58":"cami","59":"baglar","60":"magara","61":"kale","62":"dag","63":"tsutun","64":"antik","65":"kale","66":"agac","67":"magara","68":"magara","69":"kale","70":"kale","71":"kopru","72":"kale","73":"dag","74":"deniz","75":"kar","76":"dag","77":"damla","78":"ev","79":"yaprak","80":"antik","81":"selale"};
+
 const BOLGELER = [
   {ad:"Marmara", iller:["10","11","16","17","22","34","39","41","54","59","77"]},
   {ad:"Ege", iller:["03","09","20","35","43","45","48","64"]},
