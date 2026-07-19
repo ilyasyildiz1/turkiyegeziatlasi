@@ -24,6 +24,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script>try{var _t=localStorage.getItem('gezi-tema');if(_t==='gece'||(!_t&&matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.classList.add('gece');}catch(e){}</script>
 <style>
 :root{
   --deniz-1:#BFD9E2; --deniz-2:#9FC3D2;
@@ -436,6 +437,66 @@ body::after{
 .il-motif svg{width:31px;height:31px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
 @keyframes motif-gel{0%{transform:rotate(-14deg) scale(.6);opacity:0}100%{transform:rotate(-4deg) scale(1);opacity:1}}
 @media (prefers-reduced-motion: reduce){.il-motif{animation:none!important}}
+
+/* ── Gece Atlası ── */
+.tema-btn{
+  width:38px;height:38px;border-radius:50%;flex:none;cursor:pointer;font-size:16px;line-height:1;
+  border:1.5px solid rgba(36,48,56,.22);background:rgba(251,250,246,.8);
+  transition:transform .2s, background .2s;
+}
+.tema-btn:active{transform:scale(.9) rotate(-15deg)}
+html.gece{
+  --deniz-1:#182530; --deniz-2:#0F1820;
+  --kum:#4A4234; --kum-koyu:#5C5240;
+  --murekkep:#E8E2D2; --murekkep-soluk:#98A4AC;
+  --bakir:#E09A4C; --bakir-koyu:#EBAF6B;
+  --cini:#3FA37E; --cini-koyu:#57BD96;
+  --nar:#E06A5A;
+  --kagit:#1E2830; --kagit-golge:rgba(0,0,0,.5);
+  --cizgi:#3A4A55;
+}
+html.gece .tema-btn{background:rgba(24,36,46,.85);border-color:rgba(255,255,255,.22)}
+html.gece body::before{opacity:.12}
+html.gece body::after{
+  background:
+    radial-gradient(420px 300px at 82% 10%, rgba(200,220,255,.10), transparent 70%),
+    radial-gradient(560px 400px at 15% 85%, rgba(63,163,126,.07), transparent 72%);
+}
+html.gece .baslik h1{text-shadow:none}
+html.gece .arama input{background:rgba(24,34,43,.88);border-color:rgba(255,255,255,.14)}
+html.gece .arama input:focus{border-color:var(--bakir);box-shadow:0 0 0 4px rgba(224,154,76,.14)}
+html.gece #turkiye g path{stroke:#2A241B}
+html.gece #turkiye{filter:drop-shadow(0 12px 24px rgba(0,0,0,.55)) drop-shadow(0 2px 6px rgba(0,0,0,.4))}
+html.gece .il-etiket{fill:#DAD3C0;stroke:rgba(15,22,28,.8)}
+html.gece #balon{color:#141E26}
+html.gece .damga-ic{background:rgba(15,24,32,.7)}
+html.gece .panel-bas{border-bottom-color:#39434E}
+html.gece .panel-bas .plaka em{color:#141E26}
+html.gece #panel::before{background:repeating-linear-gradient(0deg,transparent,transparent 27px,rgba(255,255,255,.028) 28px)}
+html.gece .panel-tut{background:#46525C}
+html.gece .bolum h3::after,html.gece .defter-baslik::after{background:linear-gradient(90deg,rgba(255,255,255,.14),transparent)}
+html.gece .yerler li{background:#28313A}
+html.gece .yer-dinle{background:rgba(63,163,126,.14)}
+html.gece .cip{background:linear-gradient(160deg,#3A3628,#332F22);border-color:#4E4832;color:#E2D5B2;box-shadow:none}
+html.gece .mekanlar li{background:#263229;color:#AFCFBE}
+html.gece .not{color:#7E8B93}
+html.gece .tarih-metin,html.gece .bolum .tarih-metin{color:#C9CEC4}
+html.gece .il-motif{background:#28313A;box-shadow:0 2px 8px rgba(0,0,0,.35)}
+html.gece .ilerleme,html.gece .bolge-satir .b-bar{background:#33404A}
+html.gece .rozet{background:#273038;border-color:#35414B}
+html.gece .rozet.kazanildi{background:rgba(63,163,126,.16);border-color:rgba(63,163,126,.45)}
+html.gece .liste-icerik .cip{background:rgba(63,163,126,.15);border-color:rgba(63,163,126,.4);color:var(--cini-koyu)}
+html.gece .liste-kapat{color:#141E26}
+html.gece #rozet-toast{color:#141E26}
+html.gece .rehber-btn{background:rgba(63,163,126,.13)}
+html.gece .rehber-ipucu{background:rgba(63,163,126,.13)}
+html.gece .paylas-btn{background:rgba(224,154,76,.12)}
+html.gece .oneriler button:hover{background:rgba(224,154,76,.14)}
+html.gece .kapat{background:rgba(255,255,255,.08)}
+html.gece .zoomlar button{box-shadow:0 4px 14px rgba(0,0,0,.4)}
+html.gece #pusula-dekor{opacity:.4}
+html.gece .dinle-btn{background:rgba(224,154,76,.1)}
+html.gece .gezdim-btn.aktif{color:#0F1820}
 </style>
 </head>
 <body>
@@ -472,6 +533,7 @@ body::after{
     <p>81 il · keşfet, tat, damgala</p>
   </div>
   <div class="ust-butonlar">
+    <button class="tema-btn" id="tema-btn" title="Gece / gündüz görünümü" aria-label="Tema değiştir">🌙</button>
     <button class="rehber-btn" id="rehber-btn" title="Konumuna göre yakındaki tarihi yeri bul">
       <span class="pim">📍</span><span>Sesli Rehber</span>
     </button>
@@ -1539,6 +1601,23 @@ document.getElementById("paylas-btn").onclick = async ()=>{
     }
   }catch(e){ console.warn("Görsel oluşturulamadı", e); alert("Görsel oluşturulamadı, tekrar dene."); }
   btn.disabled=false; btn.textContent=eskiYazi;
+};
+
+
+/* ── gece/gündüz teması ── */
+const TEMA_ANAHTAR='gezi-tema';
+function temaUygula(gece){
+  document.documentElement.classList.toggle('gece', gece);
+  const m=document.querySelector('meta[name="theme-color"]');
+  if(m) m.setAttribute('content', gece ? '#16222B' : '#BFD9E2');
+  const b=document.getElementById('tema-btn');
+  if(b) b.textContent = gece ? '☀️' : '🌙';
+}
+temaUygula(document.documentElement.classList.contains('gece'));
+document.getElementById('tema-btn').onclick = ()=>{
+  const gece = !document.documentElement.classList.contains('gece');
+  try{ localStorage.setItem(TEMA_ANAHTAR, gece ? 'gece' : 'gunduz'); }catch(e){}
+  temaUygula(gece);
 };
 
 /* ── başlangıç ── */
