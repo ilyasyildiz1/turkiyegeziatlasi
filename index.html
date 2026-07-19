@@ -532,6 +532,15 @@ html.gece .gezdim-btn.aktif{color:#0F1820}
 @media (prefers-reduced-motion: reduce){
   #toren.acik,.toren-kart,#toren.acik .toren-madalyon{animation:none!important}
 }
+
+/* öneri mini ikonları */
+.oneri-ikon{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;color:var(--bakir-koyu);opacity:.85}
+/* damga ilerleme halkası */
+.damga-halka{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg);pointer-events:none}
+#damga-halka-cizgi{transition:stroke-dasharray .6s ease}
+/* ilk kullanıcı nabzı */
+@keyframes ilk-nabiz{0%,100%{fill:var(--kum)}50%{fill:var(--bakir)}}
+#turkiye g.ilk-nabiz path{animation:ilk-nabiz 1.5s ease 2}
 </style>
 </head>
 <body>
@@ -574,6 +583,7 @@ html.gece .gezdim-btn.aktif{color:#0F1820}
     </button>
     <div class="damga" id="damga" title="Gezdiğin iller">
       <svg viewBox="0 0 62 62"><circle cx="31" cy="31" r="29" fill="none" stroke="#B03A2E" stroke-width="1.6" stroke-dasharray="3 5"/></svg>
+      <svg class="damga-halka" viewBox="0 0 62 62"><circle id="damga-halka-cizgi" cx="31" cy="31" r="26" fill="none" stroke="#2E8B6A" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="0 163.4"/></svg>
       <div class="damga-ic"><b id="damga-sayi">0</b><span>/ 81 İL</span></div>
     </div>
   </div>
@@ -1378,7 +1388,11 @@ function haritaBoyala(){
   gruplar.forEach(g=>g.classList.toggle('gezildi', bellek.gezilen.includes(g.dataset.plakakodu)));
 }
 function sayacGuncelle(){
-  document.getElementById('damga-sayi').textContent = bellek.gezilen.length;
+  const n = bellek.gezilen.length;
+  document.getElementById('damga-sayi').textContent = n;
+  const cevre = 2*Math.PI*26;
+  const dolu = cevre*n/81;
+  document.getElementById('damga-halka-cizgi').setAttribute('stroke-dasharray', dolu.toFixed(1)+' '+(cevre-dolu).toFixed(1));
 }
 
 /* ── harita tıklama: pointerup + elementFromPoint (pointer capture click'i yuttuğu için) ── */
@@ -1483,7 +1497,7 @@ girdi.addEventListener('input', ()=>{
   const esler = Object.entries(VERI).filter(([pk,v])=> trKucult(v.ad).startsWith(q) || pk===q).slice(0,7);
   if(!esler.length){ oneriler.style.display='none'; return; }
   oneriler.innerHTML = esler.map(([pk,v])=>
-    `<button data-pk="${pk}"><span class="pk">${pk}</span>${v.ad}${bellek.gezilen.includes(pk)?'<span class="gez-isaret">✓ gezildi</span>':''}</button>`
+    `<button data-pk="${pk}"><span class="pk">${pk}</span><svg class="oneri-ikon"><use href="#mot-${MOTIF[pk]||"dag"}"/></svg>${v.ad}${bellek.gezilen.includes(pk)?'<span class="gez-isaret">✓ gezildi</span>':''}</button>`
   ).join('');
   oneriler.style.display='block';
 });
@@ -1593,17 +1607,52 @@ async function haritaGorseliOlustur(){
   const W=1080, H=1080;
   const c=document.createElement("canvas"); c.width=W; c.height=H;
   const x=c.getContext("2d");
+  /* zemin */
   const g=x.createLinearGradient(0,0,0,H); g.addColorStop(0,"#BFD9E2"); g.addColorStop(1,"#9FC3D2");
   x.fillStyle=g; x.fillRect(0,0,W,H);
   x.strokeStyle="rgba(255,255,255,.4)"; x.lineWidth=1;
   for(let y=80;y<H;y+=80){x.beginPath();x.moveTo(0,y);x.lineTo(W,y);x.stroke();}
   for(let k=80;k<W;k+=80){x.beginPath();x.moveTo(k,0);x.lineTo(k,H);x.stroke();}
+  /* pasaport çerçevesi */
+  x.strokeStyle="#B06E23"; x.lineWidth=3; x.setLineDash([16,10]);
+  x.strokeRect(30,30,W-60,H-60);
+  x.setLineDash([]); x.lineWidth=1.2; x.strokeStyle="rgba(176,110,35,.55)";
+  x.strokeRect(44,44,W-88,H-88);
+  /* köşe pusulası (sol alt) */
+  (function(){
+    const cx=108, cy=H-108, r=44;
+    x.save(); x.translate(cx,cy); x.rotate(-0.12); x.globalAlpha=.75;
+    x.strokeStyle="#243038"; x.lineWidth=2;
+    x.beginPath(); x.arc(0,0,r,0,Math.PI*2); x.stroke();
+    x.setLineDash([3,7]); x.beginPath(); x.arc(0,0,r-9,0,Math.PI*2); x.stroke(); x.setLineDash([]);
+    x.fillStyle="#B03A2E";
+    x.beginPath(); x.moveTo(0,-r+6); x.lineTo(7,-4); x.lineTo(0,0); x.lineTo(-7,-4); x.closePath(); x.fill();
+    x.fillStyle="#243038"; x.globalAlpha=.55;
+    x.beginPath(); x.moveTo(0,r-6); x.lineTo(7,4); x.lineTo(0,0); x.lineTo(-7,4); x.closePath(); x.fill();
+    x.beginPath(); x.moveTo(r-6,0); x.lineTo(4,7); x.lineTo(0,0); x.lineTo(4,-7); x.closePath(); x.fill();
+    x.beginPath(); x.moveTo(-r+6,0); x.lineTo(-4,7); x.lineTo(0,0); x.lineTo(-4,-7); x.closePath(); x.fill();
+    x.restore();
+  })();
   const n=bellek.gezilen.length;
+  /* başlık */
   x.textAlign="center"; x.fillStyle="#243038";
-  x.font="700 58px 'Fraunces', Georgia, serif";
-  x.fillText("Türkiye Gezi Atlasım", W/2, 112);
-  x.font="600 30px 'Manrope', sans-serif"; x.fillStyle="#5C6B74";
-  x.fillText(n===81 ? "81 ilin tamamını gezdim! 🎉" : `81 ilin ${n} tanesini gezdim`, W/2, 164);
+  x.font="700 56px 'Fraunces', Georgia, serif";
+  x.fillText("Türkiye Gezi Atlasım", W/2, 122);
+  x.font="600 28px 'Manrope', sans-serif"; x.fillStyle="#5C6B74";
+  x.fillText(n===81 ? "81 ilin tamamını gezdim! 🎉" : `81 ilin ${n} tanesini gezdim`, W/2, 170);
+  /* tarih mührü (sağ üst) */
+  (function(){
+    const tarih=new Date().toLocaleDateString('tr-TR',{day:'numeric',month:'long',year:'numeric'}).toLocaleUpperCase('tr');
+    x.save(); x.translate(W-195,168); x.rotate(0.14);
+    x.strokeStyle="#B03A2E"; x.lineWidth=2.5; x.globalAlpha=.85;
+    const tw=x.measureText(tarih).width;
+    x.font="800 19px 'Manrope', sans-serif";
+    const kw=x.measureText(tarih).width+36;
+    x.strokeRect(-kw/2,-24,kw,48);
+    x.fillStyle="#B03A2E"; x.textAlign="center"; x.fillText(tarih,0,7);
+    x.restore();
+  })();
+  /* harita */
   const set=new Set(bellek.gezilen);
   let ps="";
   gruplar.forEach(gr=>{
@@ -1617,16 +1666,29 @@ async function haritaGorseliOlustur(){
   const url=URL.createObjectURL(new Blob([svgStr],{type:"image/svg+xml"}));
   try{
     await new Promise((res,rej)=>{ img.onload=res; img.onerror=rej; img.src=url; });
-    const mw=W-80, mh=mw*527.323/1007.478;
-    x.drawImage(img, 40, 226, mw, mh);
-    const by=226+mh+64;
-    x.fillStyle="#E7DFCC"; yuvarlakKutu(x,140,by,W-280,20,10); x.fill();
-    if(n>0){ x.fillStyle="#2E8B6A"; yuvarlakKutu(x,140,by,Math.max(20,(W-280)*n/81),20,10); x.fill(); }
-    x.fillStyle="#243038"; x.font="800 42px 'Manrope', sans-serif";
-    x.fillText(`${n} / 81`, W/2, by+78);
-    const rz=kazanilanRozetler().size;
-    x.font="600 24px 'Manrope', sans-serif"; x.fillStyle="#5C6B74";
-    x.fillText(rz>0 ? `🏅 ${rz} rozet kazanıldı` : "Yolculuk yeni başlıyor…", W/2, by+126);
+    const mw=W-140, mh=mw*527.323/1007.478;
+    x.save();
+    x.shadowColor="rgba(36,48,56,.35)"; x.shadowBlur=26; x.shadowOffsetY=12;
+    x.drawImage(img, 70, 218, mw, mh);
+    x.restore();
+    const by=218+mh+58;
+    x.fillStyle="#E7DFCC"; yuvarlakKutu(x,170,by,W-340,18,9); x.fill();
+    if(n>0){ x.fillStyle="#2E8B6A"; yuvarlakKutu(x,170,by,Math.max(18,(W-340)*n/81),18,9); x.fill(); }
+    x.fillStyle="#243038"; x.font="800 42px 'Manrope', sans-serif"; x.textAlign="center";
+    x.fillText(`${n} / 81`, W/2, by+72);
+    /* rozet şeridi */
+    const kaz=[...kazanilanRozetler()];
+    if(kaz.length){
+      const ikonlar=ROZETLER.filter(r=>kaz.includes(r.id)).map(r=>r.ikon);
+      const goster=ikonlar.slice(0,10);
+      x.font="42px serif";
+      const genis=goster.length*56;
+      goster.forEach((ik,i)=>{ x.fillText(ik, W/2-genis/2+28+i*56, by+138); });
+      if(ikonlar.length>10){ x.font="700 26px 'Manrope', sans-serif"; x.fillStyle="#5C6B74"; x.fillText("+"+(ikonlar.length-10), W/2+genis/2+26, by+134); }
+    } else {
+      x.font="600 24px 'Manrope', sans-serif"; x.fillStyle="#5C6B74";
+      x.fillText("Yolculuk yeni başlıyor…", W/2, by+130);
+    }
   } finally { URL.revokeObjectURL(url); }
   return c;
 }
@@ -1742,6 +1804,15 @@ document.getElementById('tema-btn').onclick = ()=>{
   sayacGuncelle();
   vbUygula();
   setTimeout(()=>{ const i=document.getElementById('ipucu'); i.style.opacity='0'; setTimeout(()=>i.remove(),600); }, 5000);
+  /* ilk ziyarette İstanbul'a dokunma daveti */
+  if(bellek.gezilen.length===0 && !hareketAz){
+    setTimeout(()=>{
+      (grupByPlaka['34']||[]).forEach(g=>{
+        g.classList.add('ilk-nabiz');
+        setTimeout(()=>g.classList.remove('ilk-nabiz'), 3200);
+      });
+    }, 2200);
+  }
 })();
 
 /* ── PWA: servis çalışanı (çevrimdışı destek) ── */
