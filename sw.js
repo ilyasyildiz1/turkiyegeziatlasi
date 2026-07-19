@@ -1,7 +1,11 @@
 /* Türkiye Gezi Atlası — servis çalışanı
-   Uygulama kabuğunu önbelleğe alır; çevrimdışı çalışır.
+   Strateji:
+   - HTML (gezinme istekleri): önce ağ, çevrimdışıysa önbellek.
+     Böylece yeni sürümler sürüm numarası beklemeden anında gelir.
+   - Statik dosyalar (ikon, manifest): önce önbellek, yoksa ağ.
+   - Google Fonts: önbellekten sun, arka planda tazele.
    Sürüm değişince eski önbellek temizlenir. */
-const CACHE = 'gezi-atlasi-v1';
+const CACHE = 'gezi-atlasi-v2';
 const KABUK = [
   '.',
   'index.html',
@@ -36,7 +40,7 @@ self.addEventListener('fetch', (e) => {
 
   const url = new URL(istek.url);
 
-  // Google Fonts: stale-while-revalidate (çevrimdışıyken önbellekten)
+  // Google Fonts: önbellekten sun, arka planda tazele
   if (url.hostname.includes('fonts.googleapis.com') || url.hostname.includes('fonts.gstatic.com')) {
     e.respondWith(
       caches.open(CACHE).then(async (c) => {
@@ -51,19 +55,36 @@ self.addEventListener('fetch', (e) => {
     return;
   }
 
-  // Aynı köken: önce önbellek, sonra ağ (uygulama kabuğu)
-  if (url.origin === self.location.origin) {
+  if (url.origin !== self.location.origin) return;
+
+  // HTML gezinmeleri: ÖNCE AĞ — güncellemeler anında gelsin; çevrimdışıysa önbellek
+  const htmlIstek = istek.mode === 'navigate' || url.pathname.endsWith('/index.html');
+  if (htmlIstek) {
     e.respondWith(
-      caches.match(istek).then((onbellek) => {
-        if (onbellek) return onbellek;
-        return fetch(istek).then((yanit) => {
-          if (yanit && yanit.status === 200 && yanit.type === 'basic') {
-            const kopya = yanit.clone();
-            caches.open(CACHE).then((c) => c.put(istek, kopya));
-          }
-          return yanit;
-        }).catch(() => caches.match('index.html'));
-      })
+      fetch(istek).then((yanit) => {
+        if (yanit && yanit.status === 200) {
+          const kopya = yanit.clone();
+          caches.open(CACHE).then((c) => c.put(istek, kopya));
+        }
+        return yanit;
+      }).catch(() =>
+        caches.match(istek).then((r) => r || caches.match('index.html'))
+      )
     );
+    return;
   }
+
+  // Statik dosyalar: önce önbellek, sonra ağ
+  e.respondWith(
+    caches.match(istek).then((onbellek) => {
+      if (onbellek) return onbellek;
+      return fetch(istek).then((yanit) => {
+        if (yanit && yanit.status === 200 && yanit.type === 'basic') {
+          const kopya = yanit.clone();
+          caches.open(CACHE).then((c) => c.put(istek, kopya));
+        }
+        return yanit;
+      });
+    })
+  );
 });
