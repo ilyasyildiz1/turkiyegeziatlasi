@@ -497,6 +497,41 @@ html.gece .zoomlar button{box-shadow:0 4px 14px rgba(0,0,0,.4)}
 html.gece #pusula-dekor{opacity:.4}
 html.gece .dinle-btn{background:rgba(224,154,76,.1)}
 html.gece .gezdim-btn.aktif{color:#0F1820}
+
+/* ── rozet töreni ── */
+#toren{
+  position:fixed;inset:0;z-index:80;display:none;align-items:center;justify-content:center;
+  background:rgba(15,22,28,.55);backdrop-filter:blur(3px);
+}
+#toren.acik{display:flex;animation:toren-fon .3s ease}
+@keyframes toren-fon{from{opacity:0}}
+#konfeti{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.toren-kart{position:relative;text-align:center;padding:20px;max-width:330px}
+#toren.acik .toren-kart{animation:toren-kart-gel .4s ease .05s backwards}
+@keyframes toren-kart-gel{from{opacity:0;transform:translateY(14px)}}
+.toren-etiket{font-size:12px;font-weight:800;letter-spacing:3px;color:#F4E9D4;opacity:.92}
+.toren-madalyon{
+  width:150px;height:150px;margin:18px auto 14px;border-radius:50%;
+  background:var(--kagit);border:4px solid var(--bakir);
+  box-shadow:0 0 0 9px rgba(217,142,59,.22), 0 18px 50px rgba(0,0,0,.45);
+  display:flex;align-items:center;justify-content:center;font-size:64px;line-height:1;
+  transform:rotate(-6deg);
+}
+#toren.acik .toren-madalyon{animation:toren-vur .55s cubic-bezier(.2,2,.4,1)}
+@keyframes toren-vur{0%{transform:rotate(-6deg) scale(2.6);opacity:0}60%{opacity:1}100%{transform:rotate(-6deg) scale(1)}}
+.toren-ad{font-family:'Fraunces',serif;font-size:30px;font-weight:700;color:#fff}
+.toren-detay{font-size:14px;font-weight:600;color:rgba(255,255,255,.78);margin-top:6px;line-height:1.5}
+.toren-btn{
+  margin-top:22px;padding:12px 36px;border-radius:24px;border:none;
+  background:var(--bakir);color:#fff;font:inherit;font-weight:800;font-size:15px;cursor:pointer;
+}
+.toren-btn:active{transform:scale(.96)}
+#toren.altin .toren-madalyon{border-color:#E7C463;box-shadow:0 0 0 9px rgba(231,196,99,.30),0 18px 50px rgba(0,0,0,.5)}
+#toren.altin .toren-etiket{color:#F3DFA3}
+#toren.altin .toren-btn{background:linear-gradient(160deg,#E7C463,#C79B2E);color:#3A2E10}
+@media (prefers-reduced-motion: reduce){
+  #toren.acik,.toren-kart,#toren.acik .toren-madalyon{animation:none!important}
+}
 </style>
 </head>
 <body>
@@ -890,6 +925,17 @@ html.gece .gezdim-btn.aktif{color:#0F1820}
 </div>
 
 <div id="rozet-toast"><span id="rozet-toast-ikon"></span><span id="rozet-toast-metin"></span></div>
+
+<div id="toren" aria-hidden="true">
+  <canvas id="konfeti"></canvas>
+  <div class="toren-kart">
+    <div class="toren-etiket" id="toren-etiket">YENİ ROZET</div>
+    <div class="toren-madalyon"><span id="toren-ikon">🏆</span></div>
+    <div class="toren-ad" id="toren-ad"></div>
+    <div class="toren-detay" id="toren-detay"></div>
+    <button class="toren-btn" id="toren-btn">Devam</button>
+  </div>
+</div>
 
 <script>
 const IL_VERI = {"10":{"ad":"Balıkesir","slogan":"İki denizin şehri","t":"Ege ile Marmara'ya aynı anda kıyısı olan şehirde Ayvalık ve Cunda, taş evleri ve zeytinyağı kültürüyle öne çıkar. Mitolojide İda Dağı olarak geçen Kazdağları, ormanlarıyla milli park olarak korunur.","y":["Cunda Adası ve Ayvalık","Kazdağları Milli Parkı","Şeytan Sofrası (gün batımı)","Manyas Kuş Cenneti","Erdek ve Avşa"],"l":["Ayvalık tostu","Höşmerim","Susurluk ayranı","Papalina","Zeytinyağlı otlar"],"m":["Cunda balık restoranları","Susurluk mola tesisleri (ayran-tost)"]},"11":{"ad":"Bilecik","slogan":"Osmanlı'nın doğduğu topraklar","t":"Söğüt ve çevresi, Osmanlı Beyliği'nin doğduğu topraklardır. Osman Gazi'nin kayınpederi ve yol göstericisi Şeyh Edebali'nin türbesi, her yıl binlerce ziyaretçiyi bu sessiz şehre çeker.","y":["Şeyh Edebali Türbesi","Söğüt Ertuğrul Gazi Türbesi","Osmanlı Padişahları Tarih Şeridi","Pelitözü Gölpark","Harmankaya Kanyonu"],"l":["Ovmaç çorbası","Ispanaklı bükme","Gözleme çeşitleri","Pazaryeri helvası"],"m":["Söğüt merkez esnaf lokantaları"]},"12":{"ad":"Bingöl","slogan":"Yüzen adaların gölü","t":"Adını dağlarına serpilmiş sayısız gölden alır. Solhan'daki Aygır Gölü'nde rüzgârla sürüklenen yüzen adalar, Türkiye'de az rastlanan bir doğa olayıdır.","y":["Solhan Yüzen Adalar","Kös Kaplıcaları","Yolçatı Kayak Merkezi","Zağ Mağaraları","Kiğı Kalesi"],"l":["Tutmaç çorbası","Sac kavurma","Keşkek","Bingöl balı"],"m":["Merkez kavurmacıları","Kös Kaplıcası tesisleri"]},"13":{"ad":"Bitlis","slogan":"Beş minare, bir krater","t":"İpek Yolu üzerinde taş evleriyle bilinen şehir, beş minaresiyle türkülere geçmiştir. Nemrut Krater Gölü dünyanın büyük kalderalarındandır; Ahlat'taki Selçuklu mezar taşları açık hava müzesi gibidir.","y":["Nemrut Krater Gölü (Tatvan)","Ahlat Selçuklu Mezarlığı","Bitlis Kalesi ve taş evler","El Aman Hanı","Van Gölü kıyıları"],"l":["Büryan kebabı","İçli köfte","Avşor çorbası","Bitlis balı"],"m":["Bitlis ve Tatvan büryan salonları (öğlene kadar)"]},"14":{"ad":"Bolu","slogan":"Aşçılar ve göller diyarı","t":"Osmanlı saray mutfağına aşçı yetiştiren Mengen ilçesiyle ünlüdür. Yedigöller'in sonbahar renkleri ve Abant'ın göl manzarası, şehri dört mevsim doğa rotası yapar.","y":["Abant Gölü","Yedigöller Milli Parkı (sonbahar)","Gölcük Tabiat Parkı","Kartalkaya Kayak Merkezi","Mudurnu tarihî çarşı","Aladağlar yaylaları"],"l":["Mengen pilavı","Bolu kebabı","Kanlıca mantarı yemekleri","Mudurnu saray helvası"],"m":["Mengen usulü lokantalar","Mudurnu tarihî esnaf lokantaları"]},"15":{"ad":"Burdur","slogan":"Salda'nın beyaz kumsalları","t":"Göller Yöresi'nin sakin şehri, bembeyaz kumsallı Salda Gölü ile anılır. Dağların arasına kurulmuş Roma kenti Sagalassos, çeşmesi hâlâ akan antik kentlerdendir.","y":["Salda Gölü","Sagalassos Antik Kenti","İnsuyu Mağarası","Kibyra Antik Kenti","Burdur Gölü kuş gözlemi"],"l":["Burdur şiş köfte","Ceviz ezmesi","Testi kebabı","Haşhaşlı çörek"],"m":["Burdur merkez şiş köftecileri"]},"16":{"ad":"Bursa","slogan":"Osmanlı'nın ilk başkenti","t":"Osmanlı'nın ilk başkenti; hanları, çarşıları ve Cumalıkızık köyüyle UNESCO Dünya Mirası listesindedir. Uludağ eteklerindeki şehir, İskender kebabı ve kestane şekeriyle de sofralarda anılır.","y":["Ulu Camii ve Koza Han","Yeşil Türbe","Cumalıkızık köyü (UNESCO)","Uludağ","İnkaya Çınarı","Tophane saat kulesi ve manzara"],"l":["İskender kebap","İnegöl köfte","Cantık","Kemalpaşa tatlısı","Kestane şekeri","Pideli köfte"],"m":["Kebapçı İskender (1867'den beri)","Koza Han çevresi","İnegöl köftecileri"]},"17":{"ad":"Çanakkale","slogan":"Destanların boğazı","t":"Boğazın iki yakasında, dünya tarihini değiştiren iki büyük savaşın — Troya'nın ve Çanakkale'nin — hatırası yaşar. Homeros'un destanına konu olan Troya, UNESCO Dünya Mirası'dır.","y":["Gelibolu Şehitlikleri (Anzak Koyu, Conkbayırı)","Troya Antik Kenti ve Müzesi","Assos (Behramkale)","Bozcaada","Gökçeada","Kilitbahir Kalesi"],"l":["Peynir helvası","Ezine peyniri","Sardalya","Bozcaada bağ ürünleri"],"m":["Yalova Restaurant (tarihî)","Bozcaada meyhaneleri","Kordon balıkçıları"]},"18":{"ad":"Çankırı","slogan":"Tuzun ve yârânın şehri","t":"Beş bin yıldır işletilen tuz mağarası, yerin metrelerce altında pembe kaya tuzu galerileriyle gezilir. Ahilik geleneğinden gelen yârân sohbetleri, şehrin yaşayan kültür mirasıdır.","y":["Çankırı Tuz Mağarası","Ilgaz Dağı Milli Parkı","Tarihî saat kulesi","Taş Mescit (Cemaleddin Ferruh Darülhadisi)"],"l":["Tarhana çorbası","Keşkek","Yârân sofrası geleneği","Kaya tuzu ürünleri"],"m":["Ilgaz dağ tesisleri","Merkez esnaf lokantaları"]},"19":{"ad":"Çorum","slogan":"Hititlerin başkenti","t":"Hitit İmparatorluğu'nun başkenti Hattuşa, surları ve tapınak kalıntılarıyla Boğazkale'dedir. Tarihin bilinen ilk yazılı barış antlaşması Kadeş'in tabletleri bu topraklarda gün yüzüne çıktı.","y":["Hattuşa (Boğazkale, UNESCO)","Yazılıkaya Açık Hava Tapınağı","Alacahöyük","İncesu Kanyonu","Çorum Müzesi"],"l":["Çorum leblebisi","İskilip dolması","Mantı","Kargı tulumu"],"m":["İskilip dolması ustaları","Leblebiciler çarşısı"]},"20":{"ad":"Denizli","slogan":"Beyaz cennet Pamukkale","t":"Kar beyazı travertenleriyle Pamukkale, üzerindeki antik sağlık merkezi Hierapolis'le birlikte UNESCO Dünya Mirası'dır. İncil'de adı geçen Laodikya da bu şehrin sınırları içindedir.","y":["Pamukkale travertenleri","Hierapolis ve Antik Havuz","Laodikya Antik Kenti","Kaklık Mağarası","Buldan evleri ve dokuması"],"l":["Denizli tandır kebabı","Çal karası üzümü","Haşhaşlı çörek","Buldan kabak tatlısı"],"m":["Asırlık fırınlarda tandır kebabı sunan lokantalar"]},"21":{"ad":"Diyarbakır","slogan":"Surların ve Dicle'nin şehri","t":"Dicle'ye bakan bazalt surları beş kilometreyi aşar; Hevsel Bahçeleri ile birlikte UNESCO Dünya Mirası'dır. Ulu Camii, Anadolu'nun en eski camilerinden biri olarak hâlâ ibadete açıktır.","y":["Diyarbakır Surları ve burçlar","Hevsel Bahçeleri","Ulu Camii","On Gözlü Köprü","Hasan Paşa Hanı (kahvaltı)","Sur içi sokakları"],"l":["Ciğer kebabı","Kaburga dolması","Meftune","Burma kadayıf","Örgü peyniri"],"m":["Sur içi ciğercileri (sabah ciğeri)","Hasan Paşa Hanı kahvaltıcıları"]},"22":{"ad":"Edirne","slogan":"Serhat şehri, Selimiye'nin evi","t":"Osmanlı'ya yaklaşık bir asır başkentlik eden serhat şehri. Mimar Sinan'ın 'ustalık eserim' dediği Selimiye Camii, zarif kubbesiyle UNESCO Dünya Mirası'dır.","y":["Selimiye Camii (UNESCO)","Eski Cami ve Üç Şerefeli Cami","II. Bayezid Külliyesi Sağlık Müzesi","Meriç ve Tunca köprüleri","Karaağaç ve Lozan Anıtı"],"l":["Tava ciğer","Badem ezmesi","Deva-i misk helvası","Hardaliye"],"m":["Ciğerci Niyazi Usta","Meriç kıyısı restoranları"]},"23":{"ad":"Elazığ","slogan":"Harput'un mirası","t":"Şehrin atası Harput, Urartu'dan Osmanlı'ya kesintisiz yerleşim görmüş bir tepe şehridir. Hazar Gölü'nün suları, batık bir yerleşimin kalıntılarını saklar.","y":["Harput Kalesi ve mahallesi","Hazar Gölü","Buzluk Mağarası","Harput Ulu Camii (eğik minare)","Palu tarihî yapıları"],"l":["Harput köftesi","İşkene","Orcik (cevizli sucuk)","Ağın leblebisi","Öküzgözü üzümü"],"m":["Harput sırtındaki manzaralı köfte lokantaları"]},"24":{"ad":"Erzincan","slogan":"Karanlık Kanyon'un kıyısında","t":"Kemaliye'de Karanlık Kanyon'un dik yamaçlarına elle oyulmuş Taş Yolu, insan emeğinin çarpıcı bir anıtıdır. Bakır işçiliği ve tulum peyniri, şehrin bilinen değerlerindendir.","y":["Kemaliye ve Karanlık Kanyon","Taş Yolu (kayadan oyma)","Girlevik Şelalesi","Ergan Dağı Kayak Merkezi","Otlukbeli Gölü"],"l":["Erzincan tulum peyniri","Kete","Tandır ekmeği","Lor dolması"],"m":["Kemaliye konak pansiyonları","Merkez tulumcu-peynirciler"]},"25":{"ad":"Erzurum","slogan":"Dadaşlar diyarı","t":"Çifte Minareli Medrese, Selçuklu taş işçiliğinin zirvelerinden sayılır. Palandöken'in uzun pistleri şehri kış sporlarının merkezi yapar; cağ kebabı buradan yayılmıştır.","y":["Çifte Minareli Medrese","Erzurum Kalesi ve saat kulesi","Palandöken Kayak Merkezi","Tortum Şelalesi","Narman Peribacaları (kırmızı periler)","Yakutiye Medresesi"],"l":["Cağ kebabı","Kadayıf dolması","Su böreği","Civil peyniri"],"m":["Tarihî cağ kebabı salonları","Kadayıf dolmacıları"]},"26":{"ad":"Eskişehir","slogan":"Öğrenci şehri, Frig diyarı","t":"Frigya'nın kalbinde kurulan şehir, bugün Odunpazarı'nın renkli Osmanlı evleri ve müzeleriyle gezilir. Porsuk kıyısındaki canlı hayat şehre genç bir ruh verir; lületaşı en ince burada işlenir.","y":["Odunpazarı evleri","OMM (Odunpazarı Modern Müze)","Porsuk kıyısı ve gondol","Sazova Bilim Sanat Parkı","Frig Vadisi (Yazılıkaya-Midas)","Lületaşı Müzesi"],"l":["Çibörek","Balaban köfte","Met helvası","Haşhaşlı bükme"],"m":["Odunpazarı çibörekçileri"]},"27":{"ad":"Gaziantep","slogan":"Gastronominin başkenti","t":"UNESCO'nun gastronomi şehri; baklavasından beyranına mutfağı başlı başına seyahat sebebidir. Zeugma Mozaik Müzesi, 'Çingene Kızı'nın da aralarında olduğu mozaikleriyle dünyanın en zenginlerindendir.","y":["Zeugma Mozaik Müzesi","Gaziantep Kalesi","Bakırcılar Çarşısı ve hanlar","Rumkale","Tahmis Kahvesi (tarihî)"],"l":["Baklava","Beyran","Katmer","Yuvalama","Alinazik","Lahmacun"],"m":["İmam Çağdaş (1887'den beri)","Metanet Lokantası (beyran)","Koçak Baklava","Orkide/katmerciler sabah katmeri"]},"28":{"ad":"Giresun","slogan":"Fındığın anavatanı","t":"Kirazın adını Avrupa'ya taşıyan antik liman kenti, bugün fındığın başkentlerindendir. Doğu Karadeniz'in tek adası olan Giresun Adası, Amazon efsaneleriyle anılır.","y":["Giresun Adası","Giresun Kalesi","Kuzalan Şelalesi ve Tabiat Parkı","Kümbet Yaylası","Zeytinlik Mahallesi tarihî evleri"],"l":["Fındık ve fındık ezmesi","Karalahana çorbası","Dible","Giresun pidesi","Fındıklı tatlılar"],"m":["Zeytinlik mahallesi kafeleri","Sahil pide salonları"]},"29":{"ad":"Gümüşhane","slogan":"Pestil ve kömenin evi","t":"Adını Osmanlı dönemi gümüş madenlerinden alan şehir, pestili ve kömesiyle tanınır. Karaca Mağarası'nın sarkıt ve dikitleri, Türkiye'nin en güzel yeraltı manzaralarındandır.","y":["Karaca Mağarası","Tomara Şelalesi","Santa Harabeleri","Zigana yaylaları","Limni Gölü Tabiat Parkı"],"l":["Pestil ve köme (dünyaca meşhur)","Siron","Kuymak","Gümüşhane dut pekmezi"],"m":["Merkez pestil-köme imalathaneleri"]},"30":{"ad":"Hakkari","slogan":"Buzul göllerinin zirvesi","t":"Cilo ve Sat dağlarının buzulları ile buzul gölleri, Türkiye'nin çatısında saklı bir yüksek dağ dünyası kurar. Zap Vadisi'nin sarp coğrafyası dağcıların rotasındadır.","y":["Cilo-Sat buzul gölleri (Sat Gölleri)","Reşko Zirvesi ve Cilo Dağları","Zap Vadisi","Meydan Medresesi","Berçelan Yaylası"],"l":["Otlu peynir","Doleme","Kavut","Yayla balı"],"m":["Yüksekova ve merkez yayla sofraları"]},"31":{"ad":"Hatay","slogan":"Medeniyetler sofrası","t":"Roma'nın en büyük şehirlerinden Antakya'nın mirasçısı; 'Hristiyan' adının ilk kullanıldığı St. Pierre Mağara Kilisesi buradadır. Künefesinden zahterine mutfağı, medeniyetlerin ortak sofrasıdır.","y":["Hatay Arkeoloji Müzesi (mozaikler)","St. Pierre Kilisesi","Habib-i Neccar Camii","Harbiye Şelaleleri","Vakıflı Köyü","Uzun Çarşı"],"l":["Künefe","Tepsi kebabı","Humus ve zahter salatası","Kağıt kebabı","Sürk peyniri","Semirsek"],"m":["Uzun Çarşı künefecileri","Harbiye restoranları","Affan Kahvesi (haytalı)"]},"32":{"ad":"Isparta","slogan":"Güllerin ve göllerin şehri","t":"Mayıs sonunda gül hasadıyla pembeye bürünen şehir, dünya gül yağı üretiminin merkezlerindendir. Yazılı Kanyon ve Eğirdir Gölü, Göller Yöresi'nin en güzel duraklarındandır.","y":["Eğirdir Gölü ve Yeşilada","Gül tarlaları (Mayıs-Haziran)","Yazılı Kanyon Tabiat Parkı","Davraz Kayak Merkezi","Kovada Gölü Milli Parkı","Sagalassos'a yakınlık"],"l":["Isparta fırın kebabı","Kabune pilavı","Gül reçeli ve gül lokumu","Banak"],"m":["Merkez fırın kebapçıları","Eğirdir göl kenarı balık lokantaları"]},"33":{"ad":"Mersin","slogan":"Tantuninin ve Kızkalesi'nin şehri","t":"Aziz Paulus'un doğduğu Tarsus'tan denizin ortasındaki Kızkalesi'ne uzanan kıyı, Kilikya'nın hikâyeleriyle doludur. Tantuni ve cezerye, şehrin sokak lezzetleri olarak nam salmıştır.","y":["Kızkalesi","Cennet-Cehennem Obrukları","Tarsus (St. Paul Kuyusu, Kleopatra Kapısı)","Uzuncaburç Antik Kenti","Mamure Kalesi (Anamur)","Tarsus Şelalesi"],"l":["Tantuni","Cezerye","Batırık","Kerebiç","Anamur muzu"],"m":["İstasyon civarı tantunicileri","Tarsus tarihî ev restoranları"]},"34":{"ad":"İstanbul","slogan":"İki kıtanın imparatorluk şehri","t":"Roma, Bizans ve Osmanlı'ya başkentlik etmiş tek şehir; iki kıtayı boğazıyla birbirine bağlar. Ayasofya'dan Topkapı'ya Tarihî Yarımada, UNESCO Dünya Mirası'dır.","y":["Ayasofya ve Sultanahmet Camii","Topkapı Sarayı","Kapalıçarşı ve Mısır Çarşısı","Galata Kulesi ve Karaköy","Boğaz turu","Dolmabahçe Sarayı","Adalar","Balat-Fener"],"l":["Balık ekmek","Döner","Boza","Profiterol","Midye dolma","Lokum"],"m":["Pandeli (Mısır Çarşısı üstü, tarihî)","Vefa Bozacısı","Karaköy Güllüoğlu","Sultanahmet Köftecisi","Beyoğlu meyhaneleri"]},"35":{"ad":"İzmir","slogan":"Egenin özgür kızı","t":"Sekiz bin beş yüz yıllık liman şehri, Kordon'u ve saat kulesiyle Ege'nin en canlı merkezidir. Efes ve Bergama, UNESCO Dünya Mirası listesindeki iki antik komşusudur.","y":["Efes Antik Kenti (UNESCO)","Kemeraltı Çarşısı ve Kızlarağası Hanı","Saat Kulesi ve Konak","Şirince köyü","Alaçatı","Bergama (UNESCO)","Kordon"],"l":["Boyoz","Kumru","İzmir köfte","Gevrek","Söğüş","Şambali"],"m":["Kemeraltı esnaf lokantaları","Alsancak boyozcuları","Alaçatı taş ev restoranları","Dario Moreno Sokağı kafeleri"]},"36":{"ad":"Kars","slogan":"Ani'nin ve kazın diyarı","t":"Bin yıl önce '1001 kiliseli şehir' diye anılan Ani, İpek Yolu'nun görkemli kapısıydı; bugün UNESCO Dünya Mirası'dır. Baltık üslubundaki taş binaları, kaz sofraları ve gravyeriyle kendine has bir şehirdir.","y":["Ani Harabeleri (UNESCO)","Kars Kalesi","Çıldır Gölü (kışın atlı kızak)","Sarıkamış (kayak ve şehitlik)","Baltık mimarili sokaklar","Doğu Ekspresi deneyimi"],"l":["Kaz tandır","Kars gravyeri ve kaşarı","Piti","Kete","Kars balı"],"m":["Kaz tandırı sunan yerel lokantalar (kış)","Peynirciler çarşısı"]},"37":{"ad":"Kastamonu","slogan":"Kanyonlar ve konaklar","t":"Küre Dağları'ndaki Valla Kanyonu, Türkiye'nin en derin kanyonlarındandır. Şehir merkezi, ahşap konakları ve tarihi camileriyle Osmanlı taşrasının ruhunu korur.","y":["Valla Kanyonu","Horma Kanyonu ve Ilıca Şelalesi","Kastamonu Kalesi","Nasrullah Meydanı ve tarihî konaklar","Ilgarini Mağarası","Abana-İnebolu sahili"],"l":["Etli ekmek","Banduma","Siyez bulguru","Tirit","Çekme helva"],"m":["Merkez etli ekmek fırınları","Taşhan çevresi lokantaları"]},"38":{"ad":"Kayseri","slogan":"Mantının ve Erciyes'in şehri","t":"Kültepe'de bulunan Asur ticaret tabletleri, Anadolu'nun yazıyla tanıştığı yer olarak tarihe geçmiştir. Erciyes'in eteklerindeki şehir, mantısı ve pastırmasıyla mutfakta da iddialıdır.","y":["Erciyes Dağı (kayak)","Kültepe-Kaniş Höyüğü","Soğanlı Vadisi","Kapuzbaşı Şelaleleri","Kayseri Kalesi ve kapalı çarşı","Talas"],"l":["Mantı","Pastırma","Sucuk","Yağlama","Nevzine"],"m":["Tarihî mantı salonları","Kapalı çarşı pastırmacıları"]},"39":{"ad":"Kırklareli","slogan":"Longozların gizemi","t":"İğneada'nın longoz ormanları, Avrupa'nın en iyi korunmuş subasar ekosistemlerindendir. Trakya bağcılığının merkezlerinden olan şehirde hardaliye, asırlık bir içecek geleneğidir.","y":["İğneada Longoz Ormanları Milli Parkı","Dupnisa Mağarası","Kıyıköy","Vize antik yapıları","Şarap bağları rotası"],"l":["Hardaliye","Trakya beyaz peyniri","Köfte","Bağ yemekleri"],"m":["Kıyıköy balık lokantaları","Bağ evi işletmeleri"]},"40":{"ad":"Kırşehir","slogan":"Ahiliğin merkezi","t":"Anadolu esnaf teşkilatı Ahiliğin kurucusu Ahi Evran'ın şehri. Selçuklu döneminde gökbilim okulu olarak kullanılan Cacabey Medresesi, taç kapısıyla dikkat çeker.","y":["Cacabey Medresesi","Ahi Evran Külliyesi","Seyfe Gölü kuş cenneti","Mucur yeraltı şehri","Kaman Kalehöyük Müzesi"],"l":["Mantı","Keşkek","Pekmezli tatlılar","Yöresel bulgur yemekleri"],"m":["Merkez esnaf lokantaları (Ahi sofrası)"]},"41":{"ad":"Kocaeli","slogan":"Körfezin ve pişmaniyenin şehri","t":"Antik Nikomedia, bir dönem Roma İmparatorluğu'nun doğu başkentiydi. Bugün Kartepe ve Maşukiye İstanbul'un en yakın doğa kaçamağıdır; pişmaniye şehrin tatlı simgesidir.","y":["Kartepe (kayak ve manzara)","Maşukiye","Ormanya Doğal Yaşam Parkı","Seka Park","Ballıkayalar Tabiat Parkı"],"l":["İzmit pişmaniyesi","Maşukiye alabalığı","Umaç helvası","Değirmendere fındığı"],"m":["Maşukiye alabalık tesisleri","İzmit çarşı pişmaniyecileri"]},"01":{"ad":"Adana","slogan":"Kebabın ve Taşköprü'nün şehri","t":"Seyhan Nehri'nin iki yakasına yayılan şehir, Kizzuwatna krallığından Roma'ya uzanan binlerce yıllık bir geçmişin üzerinde durur. Roma mühendisliğinin ayakta kalan örneği Taşköprü bugün hâlâ yayaları taşır; kebap ve şalgam ise şehrin gündelik kimliğidir.","y":["Taşköprü ve Seyhan kıyısı","Büyük Saat Kulesi ve Kazancılar Çarşısı","Sabancı Merkez Camii","Varda Köprüsü (Hacıkırı)","Kapıkaya Kanyonu","Anavarza Antik Kenti"],"l":["Adana kebap","Şırdan","Bici bici","Analı kızlı","Şalgam suyu"],"m":["Kazancılar Çarşısı'ndaki tarihî kebapçılar","Kebapçı Yusuf","Sabah şırdancıları (Eski İstasyon çevresi)"]},"02":{"ad":"Adıyaman","slogan":"Kommagene'nin dev heykelleri","t":"Nemrut Dağı'nın zirvesinde Kommagene Kralı I. Antiochos'un yaptırdığı dev tanrı heykelleri ve anıt mezar, UNESCO Dünya Mirası listesindedir. Gün doğumunda heykellerin arasından izlenen manzara, Anadolu'nun en etkileyici anlarından biri sayılır.","y":["Nemrut Dağı (gün doğumu/batımı)","Cendere Köprüsü","Arsemia Antik Kenti","Perre Antik Kenti","Atatürk Barajı manzarası"],"l":["Çiğ köfte","Hıtap","Adıyaman tava","Besni üzümü ve pekmezi"],"m":["Şehir merkezindeki tava ustaları","Nemrut yolu üzerindeki köy kahvaltıcıları"]},"03":{"ad":"Afyonkarahisar","slogan":"Termal, sucuk ve kaymak","t":"Şehrin ortasında yükselen volkanik kayanın tepesindeki kale, kente adını vermiştir. Frig Vadisi'nin kaya anıtları, termal kaplıcaları ve kaymağıyla anılan şehir, Kurtuluş Savaşı'nın dönüm noktası Büyük Taarruz'a da sahne olmuştur.","y":["Afyon Kalesi","Frig Vadisi ve Ayazini","Termal oteller (Ömer-Gecek)","Zafer Müzesi","Büyük Taarruz Şehitliği (Kocatepe)"],"l":["Afyon sucuğu","Kaymak ve kaymaklı ekmek kadayıfı","Ağzıaçık böreği","Göce çorbası","Afyon lokumu"],"m":["Meşhur İkbal Lokantası (1922'den beri)","Uzun Çarşı sucukçuları"]},"04":{"ad":"Ağrı","slogan":"Türkiye'nin çatısı","t":"Türkiye'nin en yüksek zirvesi olan 5.137 metrelik Ağrı Dağı, Nuh'un Gemisi anlatılarıyla iç içe anılır. Doğubayazıt'taki İshak Paşa Sarayı, taş işçiliğiyle Osmanlı son dönem mimarisinin en zarif örneklerindendir.","y":["İshak Paşa Sarayı","Ağrı Dağı (tırmanış ve fotoğraf)","Meteor Çukuru","Durupınar oluşumu","Balık Gölü"],"l":["Abdigör köftesi","Haşıl","Murtuğa","Yayla kaşarı ve bal"],"m":["Doğubayazıt merkezdeki abdigör köftecileri"]},"05":{"ad":"Amasya","slogan":"Şehzadeler şehri","t":"Yeşilırmak'ın oyduğu vadide, kayalara oyulmuş Pontus kral mezarlarının gölgesinde uzanır. Osmanlı şehzadelerinin valilik yaptığı şehir, 1919'da Millî Mücadele'nin yol haritasını çizen Amasya Genelgesi'ne ev sahipliği yaptı.","y":["Yalıboyu evleri (gece ışıklandırması)","Kral Kaya Mezarları","Harşena Kalesi","II. Bayezid Külliyesi","Ferhat Su Kanalı","Hazeranlar Konağı"],"l":["Keşkek","Bakla dolması","Çiçek bamya çorbası","Toyga çorbası","Amasya elması"],"m":["Yalıboyu'ndaki tarihî konak restoranları","Irmak kenarı çay bahçeleri"]},"06":{"ad":"Ankara","slogan":"Cumhuriyetin kalbi","t":"Friglerden Galatlara, Roma'dan Cumhuriyet'e pek çok dönemin izini taşıyan başkent. Anıtkabir ile Anadolu Medeniyetleri Müzesi, yakın tarihle kadim geçmişi aynı şehirde buluşturur.","y":["Anıtkabir","Anadolu Medeniyetleri Müzesi","Ankara Kalesi ve Hamamönü","Gordion (Frig başkenti, UNESCO)","Beypazarı evleri","CerModern"],"l":["Ankara tava","Beypazarı güveci ve kurusu","Ankara simidi","Kalburabastı"],"m":["Kale içi tarihî lokantalar","Hamamönü kahvaltıcıları","Beypazarı esnaf lokantaları"]},"07":{"ad":"Antalya","slogan":"Turkuazın başkenti","t":"Bergama Kralı II. Attalos'un kurduğu liman şehri, bugün Akdeniz kıyısının turizm başkentidir. Sahnesi hâlâ ayakta olan Aspendos Tiyatrosu, Roma dünyasının en iyi korunmuş örneklerinden kabul edilir.","y":["Kaleiçi ve Yivli Minare","Aspendos Antik Tiyatrosu","Perge Antik Kenti","Düden ve Kurşunlu Şelaleleri","Köprülü Kanyon (rafting)","Olympos ve Yanartaş","Kaputaş Plajı"],"l":["Piyaz (tahinli)","Şiş köfte","Hibeş","Tandır kebabı","Serpme böreği"],"m":["7 Mehmet","Kaleiçi meyhaneleri","Balbey piyazcıları"]},"08":{"ad":"Artvin","slogan":"Yeşilin bin tonu","t":"Kaçkarların kuzey yamaçlarında buzul gölleri, bulut denizleri ve yaylalarla örülü bir coğrafya. Gürcü krallıklarından Osmanlı'ya uzanan sınır tarihinin izleri, vadilere serpilmiş ortaçağ kiliseleri ve kalelerde okunur.","y":["Borçka Karagöl","Şavşat Karagöl","Mençuna Şelalesi","Kaçkar yaylaları","Barhal (Altıparmak) Kilisesi","Çifte Köprüler"],"l":["Kuymak (muhlama)","Hınkel","Kaygana","Yayla balı"],"m":["Şavşat ve Borçka yayla evi işletmeleri"]},"09":{"ad":"Aydın","slogan":"İncir ve antik kentler diyarı","t":"Antik Karya'nın kalbinde, incir bahçeleriyle çevrili bir şehir. Mermer heykeltıraşlık okuluyla ünlü Afrodisias UNESCO Dünya Mirası'dır; Milet ve Priene ise İyon düşüncesinin doğduğu kentlerdendir.","y":["Afrodisias (UNESCO)","Didim Apollon Tapınağı","Milet ve Priene","Dilek Yarımadası Milli Parkı","Kuşadası","Güzelçamlı kanyonları"],"l":["Çine köftesi","Yuvarlama","Zeytinyağlılar","Aydın inciri","Paşa böreği"],"m":["Kuşadası balık lokantaları","Çine köftecileri"]}};
@@ -1326,7 +1372,7 @@ gezdimBtn.onclick = ()=>{
     });
   }
   const yeniler = [...kazanilanRozetler()].filter(id=>!oncekiRozet.has(id));
-  if(yeniler.length){ const r = ROZETLER.find(x=>x.id===yeniler[0]); if(r) rozetToast(r); }
+  yeniler.forEach(id=>{ const r = ROZETLER.find(x=>x.id===id); if(r) rozetToreni(r); });
 };
 function haritaBoyala(){
   gruplar.forEach(g=>g.classList.toggle('gezildi', bellek.gezilen.includes(g.dataset.plakakodu)));
@@ -1603,6 +1649,75 @@ document.getElementById("paylas-btn").onclick = async ()=>{
   btn.disabled=false; btn.textContent=eskiYazi;
 };
 
+
+
+/* ── rozet töreni + konfeti ── */
+const torenEl = document.getElementById('toren');
+const konfetiTuval = document.getElementById('konfeti');
+let torenKuyruk = [], torenAcikMi = false, konfetiRaf = null, torenZamanlayici = null;
+
+function konfetiBaslat(adet){
+  if(hareketAz) return;
+  const ctx = konfetiTuval.getContext('2d');
+  konfetiTuval.width = innerWidth; konfetiTuval.height = innerHeight;
+  const renkler = ['#D98E3B','#2E8B6A','#B03A2E','#EBE1CC','#E09A4C','#57BD96','#E7C463'];
+  const parcalar = Array.from({length:adet}, ()=>({
+    x: Math.random()*konfetiTuval.width,
+    y: -30 - Math.random()*konfetiTuval.height*0.6,
+    w: 5+Math.random()*6, h: 8+Math.random()*8,
+    vy: 2.2+Math.random()*3.4, vx: -1+Math.random()*2,
+    a: Math.random()*Math.PI, va: -0.12+Math.random()*0.24,
+    renk: renkler[(Math.random()*renkler.length)|0]
+  }));
+  cancelAnimationFrame(konfetiRaf);
+  (function ciz(){
+    ctx.clearRect(0,0,konfetiTuval.width,konfetiTuval.height);
+    let canli = false;
+    parcalar.forEach(p=>{
+      p.y += p.vy; p.x += p.vx + Math.sin(p.y/40); p.a += p.va;
+      if(p.y < konfetiTuval.height + 30) canli = true;
+      ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.a);
+      ctx.fillStyle = p.renk; ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);
+      ctx.restore();
+    });
+    if(canli && torenAcikMi) konfetiRaf = requestAnimationFrame(ciz);
+    else ctx.clearRect(0,0,konfetiTuval.width,konfetiTuval.height);
+  })();
+}
+
+function rozetToreni(r){
+  torenKuyruk.push(r);
+  if(!torenAcikMi) torenSiradaki();
+}
+function torenSiradaki(){
+  const r = torenKuyruk.shift();
+  if(!r){ torenAcikMi = false; return; }
+  torenAcikMi = true;
+  const final81 = r.id === 'm81';
+  torenEl.classList.toggle('altin', final81);
+  document.getElementById('toren-etiket').textContent = final81 ? '⭐ TÜM TÜRKİYE ⭐' : 'YENİ ROZET';
+  document.getElementById('toren-ikon').textContent = r.ikon;
+  document.getElementById('toren-ad').textContent = r.ad;
+  document.getElementById('toren-detay').textContent = final81
+    ? "81 ilin tamamını gezdin. Gerçek bir Atlas Ustasısın — pasaportun dolu!"
+    : r.detay.charAt(0).toUpperCase()+r.detay.slice(1) + " · Gezi defterine damgalandı";
+  if(dinlemeDurdur) try{ dinlemeDurdur(); }catch(e){}
+  torenEl.classList.remove('acik'); void torenEl.offsetWidth;
+  torenEl.classList.add('acik');
+  torenEl.setAttribute('aria-hidden','false');
+  konfetiBaslat(final81 ? 260 : 130);
+  clearTimeout(torenZamanlayici);
+  torenZamanlayici = setTimeout(torenKapat, final81 ? 9000 : 6000);
+}
+function torenKapat(){
+  clearTimeout(torenZamanlayici);
+  torenEl.classList.remove('acik');
+  torenEl.setAttribute('aria-hidden','true');
+  cancelAnimationFrame(konfetiRaf);
+  setTimeout(torenSiradaki, 260);
+}
+document.getElementById('toren-btn').onclick = torenKapat;
+torenEl.addEventListener('click', e=>{ if(e.target === torenEl) torenKapat(); });
 
 /* ── gece/gündüz teması ── */
 const TEMA_ANAHTAR='gezi-tema';
