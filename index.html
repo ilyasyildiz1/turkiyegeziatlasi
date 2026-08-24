@@ -1010,6 +1010,7 @@ html.gece #oyun-cik{background:rgba(24,36,46,.92);color:#E8E2D2}
     </div>
     <button class="paylas-btn" id="paylas-btn">📤 Haritamı Paylaş</button>
     <button class="liste-kapat" id="liste-kapat">Kapat</button>
+    <div style="text-align:center;font-size:10px;color:var(--murekkep-soluk);margin-top:6px;font-weight:600">sürüm 8</div>
   </div>
 </div>
 
@@ -2106,6 +2107,11 @@ document.getElementById('tema-btn').onclick = ()=>{
 if('serviceWorker' in navigator && location.protocol.startsWith('http')){
   window.addEventListener('load', ()=>{
     navigator.serviceWorker.register('sw.js').catch(err=>console.warn('SW kaydı başarısız', err));
+    let swYenilendi=false;
+    navigator.serviceWorker.addEventListener('controllerchange', ()=>{
+      if(swYenilendi) return; swYenilendi=true;
+      location.reload();
+    });
   });
 }
 </script>
