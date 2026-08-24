@@ -5,12 +5,17 @@
    - Statik dosyalar (ikon, manifest): önce önbellek, yoksa ağ.
    - Google Fonts: önbellekten sun, arka planda tazele.
    Sürüm değişince eski önbellek temizlenir. */
-const CACHE = 'gezi-atlasi-v3';
+const CACHE = 'gezi-atlasi-v4';
 const KABUK = [
   '.',
   'index.html',
   'manifest.webmanifest',
-  'oyun.js?v=1',
+  'oyun.js?v=2',
+  'assets/oyun/taban.png',
+  'assets/oyun/oyuncu.png',
+  'assets/oyun/objeler.png',
+  'assets/oyun/tutam.png',
+  'assets/oyun/evler.png',
   'icons/icon.svg',
   'icons/icon-192.png',
   'icons/icon-512.png',

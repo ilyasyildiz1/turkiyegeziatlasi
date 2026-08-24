@@ -53,3 +53,14 @@ commercial use.
 İl tanıtım metinleri, gezi önerileri ve sesli rehber anlatımları bu proje
 için özgün olarak yazılmıştır. / Province descriptions, travel suggestions
 and audio-guide narrations were written originally for this project.
+
+---
+
+## 3. Şehir Oyunu Piksel Sanatı — "Ninja Adventure Asset Pack"
+
+- **Kaynak / Source:** https://pixel-boy.itch.io/ninja-adventure-asset-pack
+- **Sanatçılar / Artists:** Pixel-boy & AAA
+- **Lisans / License:** Creative Commons Zero (CC0) — ticari kullanım dahil
+  her amaçla serbest / free for any use including commercial.
+- Kullanılan parçalar (assets/oyun/): zemin ve su karoları, karakter
+  animasyonları, ağaç/kaya/heykel objeleri, bina tileset'i.
