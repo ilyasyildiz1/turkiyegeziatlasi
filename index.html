@@ -578,6 +578,47 @@ html.gece .kus-ic path{stroke:rgba(200,214,226,.4)}
 #gezgin.sevinc #gezgin-fig{animation:sevinc-zipla .75s cubic-bezier(.3,1.6,.4,1)}
 @keyframes sevinc-zipla{0%,100%{transform:translateY(0)}28%{transform:translateY(-4.5px)}50%{transform:translateY(0)}70%{transform:translateY(-2.5px)}}
 @media (prefers-reduced-motion: reduce){.dalga-ic,.bulut-ic,.kus-ic{animation:none!important}}
+
+/* ── şehir oyunu ── */
+#oyun{position:fixed;inset:0;z-index:46;background:#0E1B24;display:none}
+#oyun.acik{display:block;animation:toren-fon .25s ease}
+#oyun-tuval{position:absolute;inset:0;image-rendering:pixelated;image-rendering:crisp-edges;touch-action:none}
+.oyun-ust{position:absolute;top:0;left:0;right:0;display:flex;align-items:center;gap:10px;padding:10px 12px;z-index:2}
+#oyun-cik{border:none;border-radius:18px;padding:8px 14px;font:inherit;font-weight:800;font-size:13px;background:rgba(251,250,246,.92);color:var(--murekkep);cursor:pointer}
+html.gece #oyun-cik{background:rgba(24,36,46,.92);color:#E8E2D2}
+.oyun-sehir{font-family:'Fraunces',serif;font-weight:700;font-size:17px;letter-spacing:2px;color:#F2EFE6;text-shadow:0 1px 3px rgba(0,0,0,.5)}
+.oyun-say{margin-left:auto;background:rgba(46,139,106,.92);color:#fff;font-weight:800;font-size:13px;padding:7px 13px;border-radius:16px}
+#oyun-etkile{
+  position:absolute;left:50%;bottom:96px;transform:translateX(-50%);z-index:2;
+  border:2px solid var(--bakir);border-radius:22px;padding:11px 20px;
+  font:inherit;font-weight:800;font-size:14.5px;background:rgba(251,250,246,.95);color:var(--bakir-koyu);
+  cursor:pointer;white-space:nowrap;max-width:86vw;overflow:hidden;text-overflow:ellipsis;
+  animation:etkile-gel .25s ease;
+}
+#oyun-etkile.gizli{display:none}
+@keyframes etkile-gel{from{opacity:0;transform:translateX(-50%) translateY(8px)}}
+#joystick{
+  position:absolute;left:22px;bottom:26px;width:96px;height:96px;border-radius:50%;z-index:2;
+  background:rgba(251,250,246,.14);border:2px solid rgba(251,250,246,.3);
+  display:none;touch-action:none;
+}
+#joystick-top{
+  position:absolute;left:50%;top:50%;width:44px;height:44px;margin:-22px 0 0 -22px;border-radius:50%;
+  background:rgba(251,250,246,.75);box-shadow:0 2px 8px rgba(0,0,0,.35);
+}
+@media (pointer:coarse){ #joystick{display:block} }
+#oyun-ipucu{
+  position:absolute;left:50%;bottom:12px;transform:translateX(-50%);z-index:2;
+  font-size:11.5px;font-weight:600;color:rgba(242,239,230,.75);white-space:nowrap;
+}
+.sehre-gir{
+  display:none;width:100%;margin-top:12px;padding:13px;border-radius:14px;border:none;
+  background:linear-gradient(160deg,var(--cini),var(--cini-koyu));color:#fff;
+  font:inherit;font-size:15px;font-weight:800;cursor:pointer;
+  box-shadow:0 4px 14px rgba(46,139,106,.35);
+}
+.sehre-gir.goster{display:block;animation:etkile-gel .3s ease}
+.sehre-gir:active{transform:scale(.98)}
 </style>
 </head>
 <body>
@@ -942,6 +983,7 @@ html.gece .kus-ic path{stroke:rgba(200,214,226,.4)}
         <span id="gezdim-yazi">Buraya gittim</span>
       </button>
     </div>
+    <button class="sehre-gir" id="sehre-gir">🎮 Şehri Gez</button>
   </div>
   <div class="panel-icerik">
     <div class="bolum"><h3>Tarihçe <button id="p-dinle" class="dinle-btn" aria-label="Tarihçeyi sesli dinle">🔊 Dinle</button></h3><p class="tarih-metin" id="p-tarih"></p></div>
@@ -972,6 +1014,18 @@ html.gece .kus-ic path{stroke:rgba(200,214,226,.4)}
 </div>
 
 <div id="rozet-toast"><span id="rozet-toast-ikon"></span><span id="rozet-toast-metin"></span></div>
+
+<div id="oyun" aria-hidden="true">
+  <canvas id="oyun-tuval"></canvas>
+  <div class="oyun-ust">
+    <button id="oyun-cik">← Harita</button>
+    <div class="oyun-sehir" id="oyun-sehir">İSTANBUL</div>
+    <div class="oyun-say" id="oyun-say">0/7</div>
+  </div>
+  <button id="oyun-etkile" class="gizli">🎧 <span id="oyun-etkile-ad"></span></button>
+  <div id="joystick"><div id="joystick-top"></div></div>
+  <div id="oyun-ipucu">Yön tuşları / joystick ile yürü · yerlere yaklaşınca incele</div>
+</div>
 
 <div id="toren" aria-hidden="true">
   <canvas id="konfeti"></canvas>
@@ -1286,6 +1340,10 @@ function panelDoldur(pk){
   document.getElementById('p-bolge').textContent = 'PLAKA KODU';
   document.getElementById('p-ad').textContent = v.ad;
   document.getElementById('p-motif-use').setAttribute('href', '#mot-' + (MOTIF[pk] || 'dag'));
+  const sg=document.getElementById('sehre-gir');
+  const sahneVar = window.OYUN_SAHNELER && window.OYUN_SAHNELER[pk];
+  sg.classList.toggle('goster', !!sahneVar);
+  sg.onclick = sahneVar ? ()=>{ panelKapat(); window.oyunBaslat(pk); } : null;
   const bolgeAdi = (typeof BOLGELER !== 'undefined' && (BOLGELER.find(b=>b.iller.includes(pk))||{}).ad) || 'TÜRKİYE';
   document.getElementById('p-bolge').textContent = bolgeAdi.toLocaleUpperCase('tr');
   const motifEl = document.getElementById('p-motif');
@@ -2051,5 +2109,6 @@ if('serviceWorker' in navigator && location.protocol.startsWith('http')){
   });
 }
 </script>
+<script src="oyun.js?v=1"></script>
 </body>
 </html>
