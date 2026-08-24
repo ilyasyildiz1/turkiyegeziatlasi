@@ -5,7 +5,7 @@
    - Statik dosyalar (ikon, manifest): önce önbellek, yoksa ağ.
    - Google Fonts: önbellekten sun, arka planda tazele.
    Sürüm değişince eski önbellek temizlenir. */
-const CACHE = 'gezi-atlasi-v4';
+const CACHE = 'gezi-atlasi-v5';
 const KABUK = [
   '.',
   'index.html',
@@ -67,7 +67,7 @@ self.addEventListener('fetch', (e) => {
   const htmlIstek = istek.mode === 'navigate' || url.pathname.endsWith('/index.html');
   if (htmlIstek) {
     e.respondWith(
-      fetch(istek).then((yanit) => {
+      fetch(istek, { cache: 'no-cache' }).then((yanit) => {
         if (yanit && yanit.status === 200) {
           const kopya = yanit.clone();
           caches.open(CACHE).then((c) => c.put(istek, kopya));
