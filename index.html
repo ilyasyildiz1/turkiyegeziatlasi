@@ -564,6 +564,20 @@ html.gece .nokta-pin{stroke:#141E26}
 #gezgin-fig{transform-box:fill-box;transform-origin:center}
 .gezdim-satir{display:none}
 @media (prefers-reduced-motion: reduce){#noktalar{opacity:1;animation:none}}
+
+/* ── canlı dünya: dalga, bulut, kuş ── */
+.dalga-ic{fill:none;stroke:rgba(255,255,255,.6);stroke-width:1.6;stroke-linecap:round;animation:dalga-kipir 3.8s ease-in-out infinite}
+@keyframes dalga-kipir{0%,100%{opacity:.12;transform:translateY(0)}50%{opacity:.6;transform:translateY(-1.5px)}}
+html.gece .dalga-ic{stroke:rgba(170,200,230,.38)}
+.bulut-ic{animation:bulut-suzul linear infinite}
+@keyframes bulut-suzul{from{transform:translateX(-180px)}to{transform:translateX(1200px)}}
+.kus-ic{animation:kus-ucus linear infinite;opacity:0}
+@keyframes kus-ucus{0%{transform:translateX(-90px);opacity:0}4%{opacity:1}92%{opacity:1}100%{transform:translateX(1120px);opacity:0}}
+.kus-ic path{fill:none;stroke:rgba(36,48,56,.55);stroke-width:1.5;stroke-linecap:round}
+html.gece .kus-ic path{stroke:rgba(200,214,226,.4)}
+#gezgin.sevinc #gezgin-fig{animation:sevinc-zipla .75s cubic-bezier(.3,1.6,.4,1)}
+@keyframes sevinc-zipla{0%,100%{transform:translateY(0)}28%{transform:translateY(-4.5px)}50%{transform:translateY(0)}70%{transform:translateY(-2.5px)}}
+@media (prefers-reduced-motion: reduce){.dalga-ic,.bulut-ic,.kus-ic{animation:none!important}}
 </style>
 </head>
 <body>
@@ -1120,6 +1134,54 @@ NOKTALAR.forEach(nk=>{
   pinKat.appendChild(g);
   nk.el=g;
 });
+/* ── atmosfer: dalgalar, bulut gölgeleri, kuşlar ── */
+if(!hareketAz){
+  const atmo=document.createElementNS(NS2,'g');
+  atmo.setAttribute('id','atmosfer');
+  atmo.setAttribute('pointer-events','none');
+  /* bulanıklık filtresi */
+  const defs=document.createElementNS(NS2,'defs');
+  defs.innerHTML='<filter id="atmo-blur" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="9"/></filter>';
+  atmo.appendChild(defs);
+  /* deniz dalgaları (el ile seçilmiş deniz noktaları) */
+  const dalgaYer=[[150,20],[350,12],[560,16],[770,24],[935,40],[16,205],[30,298],[12,380],[178,484],[330,504],[520,508],[662,494],[98,114],[897,236]];
+  dalgaYer.forEach((k,i)=>{
+    const g=document.createElementNS(NS2,'g');
+    g.setAttribute('transform','translate('+k[0]+' '+k[1]+')');
+    const p=document.createElementNS(NS2,'path');
+    p.setAttribute('d','M0 0 q5 -4 10 0 t10 0');
+    p.setAttribute('class','dalga-ic');
+    p.style.animationDelay=((i*0.9)%3.8)+'s';
+    g.appendChild(p); atmo.appendChild(g);
+  });
+  /* bulut gölgeleri */
+  [[70,58,110,38],[240,74,150,90],[420,60,120,145]].forEach((b,i)=>{
+    const g=document.createElementNS(NS2,'g');
+    g.setAttribute('transform','translate(0 '+b[3]+')');
+    const e=document.createElementNS(NS2,'ellipse');
+    e.setAttribute('rx',b[1]); e.setAttribute('ry',b[1]*0.34);
+    e.setAttribute('fill','rgba(36,48,56,.075)');
+    e.setAttribute('filter','url(#atmo-blur)');
+    e.setAttribute('class','bulut-ic');
+    e.style.animationDuration=(85+i*32)+'s';
+    e.style.animationDelay=(-i*40)+'s';
+    g.appendChild(e); atmo.appendChild(g);
+  });
+  /* kuş sürüleri */
+  [[54,47,0],[168,63,-25]].forEach((k,i)=>{
+    const g=document.createElementNS(NS2,'g');
+    g.setAttribute('transform','translate(0 '+k[0]+')');
+    const ic=document.createElementNS(NS2,'g');
+    ic.setAttribute('class','kus-ic');
+    ic.style.animationDuration=k[1]+'s';
+    ic.style.animationDelay=k[2]+'s';
+    ic.innerHTML='<path d="M0 0 Q3 -3.2 6 0 M6 0 Q9 -3.2 12 0"/>'+
+                 '<path d="M-9 5 Q-6 2 -3 5 M-3 5 Q0 2 3 5" opacity=".8"/>'+
+                 '<path d="M9 -5 Q12 -8 15 -5 M15 -5 Q18 -8 21 -5" opacity=".65"/>';
+    g.appendChild(ic); atmo.appendChild(g);
+  });
+  svg.appendChild(atmo);
+}
 svg.appendChild(pinKat);
 /* gezgin karakter */
 const gezginKat=document.createElementNS(NS2,'g');
@@ -1181,6 +1243,11 @@ function gezginGonder(nk){
 function varis(nk){
   gezginKat.classList.remove('yuruyor');
   gezginMesgul=false;
+  if(!hareketAz){
+    gezginKat.classList.remove('sevinc'); void gezginKat.getBoundingClientRect();
+    gezginKat.classList.add('sevinc');
+    setTimeout(()=>gezginKat.classList.remove('sevinc'), 800);
+  }
   try{ localStorage.setItem('gezgin-konum', JSON.stringify([gezginX,gezginY])); }catch(e){}
   if(!hareketAz && nk.el){ nk.el.style.animation='nokta-sic .5s ease'; setTimeout(()=>{ if(nk.el) nk.el.style.animation=''; },600); }
   ziyaretEt(nk);
